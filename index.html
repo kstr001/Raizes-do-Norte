@@ -6,7 +6,7 @@
   <title>Raízes do Nordeste - Pedido</title>
   <style>
     
-    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f5f5f5; }
+    body {background: url('menu.jpg') no-repeat center center fixed;background-size: cover;}
     .container { max-width:600px; margin:auto; padding:20px; }
     .card { background:#fff; padding:15px; margin-bottom:15px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,.1); }
     h1, h3 { text-align:center; }
@@ -29,9 +29,13 @@
 
     .hidden { display:none; }
 
-    /* Modal */
     #modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.5); }
     #modalContent { background:#fff; padding:20px; border-radius:10px; max-width:300px; margin:100px auto; text-align:center; }
+
+    @media (max-width: 768px){
+      body {background: url('menucelular.jpg') no-repeat center center fixed;background-size: cover;}
+    }
+
   </style>
 </head>
 <body>
@@ -52,6 +56,25 @@
     </select>
 
     <button onclick="login()">Entrar</button>
+  </div>
+
+  <!-- TELA: + PEDIDOS -->
+ <div id="telaMenu" class="hidden">
+    <h1>Mais Pedidos 🔥</h1>
+
+    <div class="card">
+      <div class="grid">
+        <div class="produto" onclick="selecionarProduto(event,'Tapioca',12,5)">
+          <p>🔥 Tapioca</p>
+        </div>
+
+        <div class="produto" onclick="selecionarProduto(event,'Cuscuz',10,7)">
+          <p>🔥 Cuscuz</p>
+        </div>
+      </div>
+
+      <button onclick="irParaTela('tela2')">Ver Cardápio Completo</button>
+    </div>
   </div>
 
   <!-- TELA 2: PRODUTOS -->
@@ -92,23 +115,23 @@
   </div>
 
   <!-- TELA 4: ENDEREÇO -->
-<div id="telaEndereco" class="hidden">
-  <h1>Endereço</h1>
-  <div class="card">
-    <input type="text" id="cep" placeholder="CEP">
-    <input type="text" id="numero" placeholder="Número">
+  <div id="telaEndereco" class="hidden">
+    <h1>Endereço</h1>
+    <div class="card">
+      <input type="text" id="cep" placeholder="CEP">
+      <input type="text" id="numero" placeholder="Número">
 
-    <button onclick="irParaPagamentoComEndereco()">Continuar</button>
-    <button onclick="irParaTela('tela3')">Voltar</button>
+      <button onclick="irParaPagamentoComEndereco()">Continuar</button>
+      <button onclick="irParaTela('tela3')">Voltar</button>
+    </div>
   </div>
-</div>
 
   <!-- TELA 5: PAGAMENTO -->
   <div id="tela4" class="hidden">
     <h1>Pagamento</h1>
     <div class="card">
       <p><strong>Total: R$ <span id="totalPagamento">0</span></strong></p>
-      <button onclick="solicitarPagamento()">Pagar</button>
+        <button onclick="solicitarPagamento()">Pagar</button>
       <p id="resultado"></p>
       <button onclick="irParaTela('tela3')">Voltar</button>
     </div>
@@ -170,7 +193,7 @@ function login() {
   }
 
   if (user === 'admin' && pass === '123') {
-    irParaTela('tela2');
+    irParaTela('telaMenu');
   } else {
     mostrarModal('Login inválido');
   }
@@ -268,7 +291,7 @@ function solicitarPagamento() {
     atualizarDisplay();
 
     setTimeout(() => {
-        irParaTela('tela5');
+      irParaTela('tela5');
     }, 1500);
 
     } else {
@@ -323,6 +346,16 @@ function mostrarLoading() {
 
 function esconderLoading() {
   document.getElementById('loading').style.display = 'none';
+}
+
+function irParaCarrinho() {
+  if (carrinho.length === 0) {
+    mostrarModal('Carrinho vazio');
+    return;
+  }
+
+  renderCarrinho();
+  irParaTela('tela3');
 }
 
 </script>

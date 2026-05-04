@@ -5,14 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Raízes do Nordeste - Pedido</title>
   <style>
-    
-    body {background: url('menu.jpg') no-repeat center center fixed;background-size: cover;}
+    body{ background-color: rgba(255, 233, 201, 0.644);}
+
     .container { max-width:600px; margin:auto; padding:20px; }
+
     .card { background:#fff; padding:15px; margin-bottom:15px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,.1); }
+
     h1, h3 { text-align:center; }
-    button { width:100%; padding:10px; margin-top:10px; border:none; border-radius:5px; background:#ff6600; color:#fff; font-size:16px; }
-    button:hover { background:#e65c00; }
-    select, input { width:100%; padding:10px; margin-top:5px; border-radius:5px; border:1px solid #ccc; }
+
+    button { margin-left:20%; margin-right:20%; width:60%; padding:10px; margin-top:10px; border:none; border-radius:5px; background:#f3b04b; color:#fff; font-size:16px; }
+
+    button:hover { background:#81818148; color: rgba(0, 0, 0, 0.61);}
+
+    select { width:100%; padding:10px; margin-top:5px; border-radius:5px; border:1px solid #ccc; box-sizing: border-box;}
 
     button:disabled {background: #ccc;color: #666;cursor: not-allowed;}
 
@@ -20,32 +25,48 @@
 
     .aprovado {color: green;}
 
+    input {width: 100%;padding: 10px;margin-top: 5px;border-radius: 5px;border: 1px solid #ccc; box-sizing: border-box; }
+
     .negado {color: red;}
 
     .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); gap:10px; }
+
     .produto { background:#fff; border-radius:10px; padding:10px; text-align:center; cursor:pointer; border:2px solid transparent; }
+
     .produto.selected { border:2px solid #ff6600; }
+
     .produto img { width:100%; border-radius:8px; }
 
-    .hidden { display:none; }
+    .hidden { display: none !important;}
 
     #modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.5); }
+
     #modalContent { background:#fff; padding:20px; border-radius:10px; max-width:300px; margin:100px auto; text-align:center; }
 
-    @media (max-width: 768px){
-      body {background: url('menucelular.jpg') no-repeat center center fixed;background-size: cover;}
-    }
+    .menu-topo {position: fixed;top: 0;left: 0;width: 100%;height: 60px;background: #ffffff;display: flex;align-items: center;justify-content: space-between; padding: 0 20px;box-shadow: 0 2px 8px rgba(0,0,0,.2);z-index: 1000;box-sizing: border-box; }
 
+    .menu-centro {display: flex;flex-direction: row;gap: 10px; }
+
+    .menu-centro button, .menu-direita button {width: auto; margin: 0;white-space: nowrap; }
+
+    .menu-direita {display: flex;align-items: center;}
+
+    #userIcon {margin-right: 10px;font-size: 20px;}
+
+    .container {margin-top: 80px;}
+
+    
   </style>
 </head>
 <body>
+
 <div class="container">
 
   <!-- TELA 1: LOGIN + UNIDADE -->
   <div id="tela1" class="card">
     <h3>Login</h3>
     <input type="text" id="usuario" placeholder="Usuário">
-    <input type="password" id="senha" placeholder="Senha">
+    <input  type="password" id="senha" placeholder="Senha">
     <br>
     <br>
     <label>Unidade:</label>
@@ -56,6 +77,35 @@
     </select>
 
     <button onclick="login()">Entrar</button>
+
+    <button onclick="mostrarModal('Ops!!!...')">Esqueci a Senha</button>
+
+    <button onclick="mostrarModal('Ops!!!...')">Novo Cadastro</button>
+
+  </div>
+
+  
+  <div id="menuTopo" class="hidden menu-topo">
+    
+    <div class="menu-esquerda">
+      <strong>🌵 Raízes</strong>
+    </div>
+
+    <div class="menu-centro">
+      <button onclick="abrirCardapio()">Cardápio</button>
+      <button onclick="mostrarModal('Financeiro em construção')">Financeiro</button>
+      <button onclick="mostrarModal('Gestão em construção')">Gestão</button>
+    </div>
+
+    <div class="menu-direita">
+      <span id="userIcon">👤</span>
+      <button onclick="irParaCarrinho()">🛒</button>
+    </div>
+
+  </div>
+
+  <div id="telaHome" class="hidden">
+    <h1 style="text-align:center;">Bem-vindo 👋</h1>
   </div>
 
   <!-- TELA: + PEDIDOS -->
@@ -76,6 +126,8 @@
       <button onclick="irParaTela('tela2')">Ver Cardápio Completo</button>
     </div>
   </div>
+
+  
 
   <!-- TELA 2: PRODUTOS -->
   <div id="tela2" class="hidden">
@@ -136,7 +188,6 @@
       <button onclick="irParaTela('tela3')">Voltar</button>
     </div>
   </div>
-
 </div>
 
 <!-- TELA 6: PREPARO -->
@@ -167,7 +218,15 @@ function irParaTela(id) {
 
   setTimeout(() => {
     document.querySelectorAll('[id^="tela"]').forEach(t => t.classList.add('hidden'));
+    
     document.getElementById(id).classList.remove('hidden');
+
+    const menu = document.getElementById('menuTopo');
+    if (id === 'tela1') {
+      menu.classList.add('hidden'); 
+    } else {
+      menu.classList.remove('hidden'); 
+    }
 
     esconderLoading();
   }, 800);
@@ -193,7 +252,8 @@ function login() {
   }
 
   if (user === 'admin' && pass === '123') {
-    irParaTela('telaMenu');
+    document.getElementById('menuTopo').classList.remove('hidden'); // 👈 AQUI
+    irParaTela('telaHome');
   } else {
     mostrarModal('Login inválido');
   }
@@ -202,8 +262,7 @@ function login() {
 let carrinho = [];
 let produtoSelecionado = null;
 let total = 0;
-let pedidoAtivo = null;
-let segundosRestantes = 0;
+
 
 function adicionarCarrinho() {
   if (!produtoSelecionado) {
@@ -221,8 +280,6 @@ function adicionarCarrinho() {
 
 function renderCarrinho() {
   const lista = document.getElementById('listaCarrinho');
-  if (!lista) return; 
-  
   lista.innerHTML = '';
 
   carrinho.forEach((item, index) => {
@@ -255,6 +312,7 @@ function solicitarPagamento() {
   const botao = event.currentTarget;
 
   botao.disabled = true;
+
   resultado.className = 'mensagem';
   resultado.innerText = 'Processando pagamento...';
 
@@ -262,57 +320,44 @@ function solicitarPagamento() {
     const sucesso = Math.random() < 0.5;
 
     if (sucesso) {
-      resultado.className = 'mensagem aprovado';
-      resultado.innerText = 'Pagamento aprovado!';
+    resultado.className = 'mensagem aprovado';
+    resultado.innerText = 'Pagamento aprovado!';
 
-      // 1. SALVA O PEDIDO ATUAL ANTES DE LIMPAR
-      pedidoAtivo = {
-        itens: [...carrinho],
-        tempoTotal: carrinho.reduce((acc, item) => acc + item.tempo, 0) + getTempoEntrega()
-      };
+    const tempoProduto = carrinho.reduce((acc, item) => acc + item.tempo, 0);
+    const tempoEntrega = getTempoEntrega();
+    const tempoTotal = tempoProduto + tempoEntrega;
+    
+    let segundosRestantes = tempoTotal * 60; 
 
-      // 2. RESET TOTAL (Limpa memória e HTML)
-      carrinho = [];
-      total = 0;
-      document.getElementById('total').innerText = '0';
-      document.getElementById('totalPagamento').innerText = '0';
-      document.getElementById('listaCarrinho').innerHTML = ''; // 👈 Limpa o HTML do carrinho
-      
-      // Remove seleções visuais do cardápio
-      document.querySelectorAll('.produto').forEach(p => p.classList.remove('selected'));
+    const atualizarDisplay = () => {
+        const minutos = Math.floor(segundosRestantes / 60);
+        const segundos = segundosRestantes % 60;
+        
+        // Formata para aparecer sempre 00:00
+        const formatado = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+        document.getElementById('tempoPreparo').innerText = formatado;
+    };
 
-      // 3. CONFIGURA O CONTADOR DE PREPARO
-      let segundosRestantes = pedidoAtivo.tempoTotal * 60; 
-      const atualizarDisplay = () => {
-          const minutos = Math.floor(segundosRestantes / 60);
-          const segundos = segundosRestantes % 60;
-          document.getElementById('tempoPreparo').innerText = `${minutos}:${segundos.toString().padStart(2, '0')}`;
-      };
+    const contadorId = setInterval(() => {
+        segundosRestantes--;
+        atualizarDisplay();
 
-      const contadorId = setInterval(() => {
-          segundosRestantes--;
-          atualizarDisplay();
-          if (segundosRestantes <= 0) {
-              clearInterval(contadorId);
-              document.getElementById('tempoPreparo').innerText = "Pedido Pronto!";
-          }
-      }, 1000);
+        if (segundosRestantes <= 0) {
+            clearInterval(contadorId);
+            document.getElementById('tempoPreparo').innerText = "Pedido Pronto!";
+        }
+    }, 1000);
 
-      atualizarDisplay();
+    atualizarDisplay();
 
-      // 4. PREPARA PARA A PRÓXIMA COMPRA
-      setTimeout(() => {
-        irParaTela('tela5');
-        // Reseta o botão e a mensagem de resultado para quando o usuário voltar
-        botao.disabled = false; 
-        resultado.innerText = ''; 
-        resultado.className = '';
-      }, 1500);
+    setTimeout(() => {
+      irParaTela('tela5');
+    }, 1500);
 
     } else {
       resultado.className = 'mensagem negado';
       resultado.innerText = 'Pagamento negado!';
-      botao.disabled = false; // Permite tentar de novo se falhar
+      botao.disabled = false;
     }
   }, 3000);
 }
@@ -364,12 +409,38 @@ function esconderLoading() {
 }
 
 function irParaCarrinho() {
-  if (pedidoAtivo) {
-    irParaTela('tela5');
+  if (carrinho.length === 0) {
+    mostrarModal('Carrinho vazio');
     return;
   }
 
-  mostrarModal('Seu carrinho está vazio!');
+  renderCarrinho();
+  irParaTela('tela5');
+}
+
+function abrirCardapio() {
+  document.getElementById('modalMsg').innerHTML = `
+    <h3>🔥 Mais Pedidos</h3>
+
+    <div class="grid">
+      <div onclick="selecionarProduto(event,'Tapioca',12,5)">
+        <img src="https://www.sabornamesa.com.br/media/k2/items/cache/9217346f41a5b7e8e45bd1d2bf97a850_XL.jpg" width="80">
+        <p>Tapioca</p>
+      </div>
+
+      <div onclick="selecionarProduto(event,'Cuscuz',10,7)">
+        <img src="https://totalpass.com/wp-content/uploads/2025/01/cuscuz-de-milho.jpg" width="80">
+        <p>Cuscuz</p>
+      </div>
+    </div>
+
+    <br>
+    <button onclick="fecharModal(); irParaTela('tela2')">
+      Ver Cardápio Completo
+    </button>
+  `;
+
+  document.getElementById('modal').style.display = 'block';
 }
 
 </script>

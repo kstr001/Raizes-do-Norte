@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Raízes do Nordeste - Pedido</title>
   <style>
-    body{ background-color: rgba(255, 233, 201, 0.644);}
+    body{ background-color: rgba(255, 233, 201, 0.644); }
 
     .container { max-width:600px; margin:auto; padding:20px; }
 
@@ -15,19 +15,19 @@
 
     button { margin-left:20%; margin-right:20%; width:60%; padding:10px; margin-top:10px; border:none; border-radius:5px; background:#f3b04b; color:#fff; font-size:16px; }
 
-    button:hover { background:#81818148; color: rgba(0, 0, 0, 0.61);}
+    button:hover { background:#81818148; color: rgba(0, 0, 0, 0.61); }
 
-    select { width:100%; padding:10px; margin-top:5px; border-radius:5px; border:1px solid #ccc; box-sizing: border-box;}
+    select { width:100%; padding:10px; margin-top:5px; border-radius:5px; border:1px solid #ccc; box-sizing: border-box; }
 
-    button:disabled {background: #ccc;color: #666;cursor: not-allowed;}
+    button:disabled { background: #ccc;color: #666;cursor: not-allowed; }
 
-    .mensagem {font-size: 18px;font-weight: bold;margin-top: 10px;}
+    .mensagem { font-size: 18px;font-weight: bold;margin-top: 10px; }
 
-    .aprovado {color: green;}
+    .aprovado { color: green; }
 
-    input {width: 100%;padding: 10px;margin-top: 5px;border-radius: 5px;border: 1px solid #ccc; box-sizing: border-box; }
+    input { width: 100%;padding: 10px;margin-top: 5px;border-radius: 5px;border: 1px solid #ccc; box-sizing: border-box; }
 
-    .negado {color: red;}
+    .negado { color: red; }
 
     .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); gap:10px; }
 
@@ -43,17 +43,19 @@
 
     #modalContent { background:#fff; padding:20px; border-radius:10px; max-width:300px; margin:100px auto; text-align:center; }
 
-    .menu-topo {position: fixed;top: 0;left: 0;width: 100%;height: 60px;background: #ffffff;display: flex;align-items: center;justify-content: space-between; padding: 0 20px;box-shadow: 0 2px 8px rgba(0,0,0,.2);z-index: 1000;box-sizing: border-box; }
+    .menu-topo { position: fixed; top: 0; left: 0; width: 100%; height: auto; background: #ffffff; display: flex; flex-direction: column; align-items: center; padding: 10px 0; box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 1000; box-sizing: border-box; }
 
-    .menu-centro {display: flex;flex-direction: row;gap: 10px; }
+    .menu-centro { display: flex; flex-direction: row; justify-content: center; gap: 8px; width: 100%; }
 
-    .menu-centro button, .menu-direita button {width: auto; margin: 0;white-space: nowrap; }
+    .menu-centro button { width: auto; margin: 0; padding: 8px 12px; font-size: 14px; white-space: nowrap; }
 
-    .menu-direita {display: flex;align-items: center;}
+    .menu-direita { display: flex;align-items: center; }
 
-    #userIcon {margin-right: 10px;font-size: 20px;}
+    .menu-superior-linha { width: 100%; display: flex; justify-content: space-between; padding: 0 20px; margin-bottom: 10px; box-sizing: border-box; }
 
-    .container {margin-top: 80px;}
+    #userIcon { margin-right: 10px;font-size: 20px; }
+
+    .container { margin-top: 130px; }
 
     
   </style>
@@ -80,26 +82,38 @@
 
     <button onclick="mostrarModal('Ops!!!...')">Esqueci a Senha</button>
 
-    <button onclick="mostrarModal('Ops!!!...')">Novo Cadastro</button>
+    <button onclick="irParaTela('telaCadastro')">Novo Cadastro</button>
 
   </div>
 
-  
+  <div id="telaCadastro" class="hidden">
+    <h1>Novo Cadastro 🌵</h1>
+    <div class="card">
+      <input type="text" id="cadNome" placeholder="Nome Completo">
+      <input type="text" id="cadUsuario" placeholder="Escolha um Usuário">
+      <input type="password" id="cadSenha" placeholder="Crie uma Senha">
+      
+      <button onclick="salvarCadastro()">Finalizar Cadastro</button>
+      <button onclick="irParaTela('tela1')">Voltar ao Login</button>
+    </div>
+  </div>
+
   <div id="menuTopo" class="hidden menu-topo">
-    
-    <div class="menu-esquerda">
-      <strong>🌵 Raízes</strong>
+  
+    <div class="menu-superior-linha">
+      <div class="menu-esquerda">
+        <strong>🌵 Raízes do Nordeste</strong>
+      </div>
+      <div class="menu-direita">
+        <span id="userIcon">👤</span>
+        <button onclick="irParaCarrinho()">🛒</button>
+      </div>
     </div>
 
     <div class="menu-centro">
       <button onclick="abrirCardapio()">Cardápio</button>
       <button onclick="mostrarModal('Financeiro em construção')">Financeiro</button>
       <button onclick="mostrarModal('Gestão em construção')">Gestão</button>
-    </div>
-
-    <div class="menu-direita">
-      <span id="userIcon">👤</span>
-      <button onclick="irParaCarrinho()">🛒</button>
     </div>
 
   </div>
@@ -203,7 +217,7 @@
 <div id="modal">
   <div id="modalContent">
     <p id="modalMsg"></p>
-    <button onclick="fecharModal()">OK</button>
+    <button id="btnModalOk" onclick="fecharModal()">OK</button>
   </div>
 </div>
 
@@ -222,7 +236,8 @@ function irParaTela(id) {
     document.getElementById(id).classList.remove('hidden');
 
     const menu = document.getElementById('menuTopo');
-    if (id === 'tela1') {
+
+    if (id === 'tela1' || id === 'telaCadastro') {
       menu.classList.add('hidden'); 
     } else {
       menu.classList.remove('hidden'); 
@@ -232,8 +247,17 @@ function irParaTela(id) {
   }, 800);
 }
 
-function mostrarModal(msg) {
-  document.getElementById('modalMsg').innerText = msg;
+function mostrarModal(msg, mostrarBotaoOk = true) {
+  document.getElementById('modalMsg').innerHTML = msg;
+  
+  const btnOk = document.getElementById('btnModalOk');
+  
+  if (mostrarBotaoOk) {
+    btnOk.classList.remove('hidden'); 
+  } else {
+    btnOk.classList.add('hidden');  
+  }
+  
   document.getElementById('modal').style.display = 'block';
 }
 
@@ -242,27 +266,62 @@ function fecharModal() {
 }
 
 function login() {
-  const user = document.getElementById('usuario').value;
-  const pass = document.getElementById('senha').value;
+  const userDigitado = document.getElementById('usuario').value;
+  const passDigitado = document.getElementById('senha').value;
   const unidade = document.getElementById('unidade').value;
 
-  if (!user || !pass || !unidade) {
+  if (!userDigitado || !passDigitado || !unidade) {
     mostrarModal('Preencha todos os campos');
     return;
   }
 
-  if (user === 'admin' && pass === '123') {
-    document.getElementById('menuTopo').classList.remove('hidden'); // 👈 AQUI
+  const usuarioEncontrado = usuariosCadastrados.find(u => 
+    u.user === userDigitado && u.pass === passDigitado
+  );
+
+  if (usuarioEncontrado) {
+    document.getElementById('menuTopo').classList.remove('hidden');
+    document.querySelector('#telaHome h1').innerText = `Bem-vindo, ${usuarioEncontrado.nome} 👋`;
     irParaTela('telaHome');
   } else {
-    mostrarModal('Login inválido');
+    mostrarModal('Usuário ou senha incorretos');
   }
 }
 
+function salvarCadastro() {
+  const nomeInput = document.getElementById('cadNome');
+  const userInput = document.getElementById('cadUsuario');
+  const senhaInput = document.getElementById('cadSenha');
+
+  if (!nomeInput.value || !userInput.value || !senhaInput.value) {
+    mostrarModal('Preencha todos os campos!');
+    return;
+  }
+
+  usuariosCadastrados.push({ 
+    nome: nomeInput.value, 
+    user: userInput.value, 
+    pass: senhaInput.value 
+  });
+
+  nomeInput.value = '';
+  userInput.value = '';
+  senhaInput.value = '';
+
+  mostrarModal('Cadastro realizado com sucesso!');
+  irParaTela('tela1');
+}
+
+let pedidosAtivos = [];
 let carrinho = [];
 let produtoSelecionado = null;
 let total = 0;
-
+let segundosRestantesGeral = 0; 
+let intervaloContador = null;
+let usuariosCadastrados = [
+  { user: 'admin', pass: '123', nome: 'Administrador' }
+];
+let motorRodando = false;
 
 function adicionarCarrinho() {
   if (!produtoSelecionado) {
@@ -320,40 +379,32 @@ function solicitarPagamento() {
     const sucesso = Math.random() < 0.5;
 
     if (sucesso) {
-    resultado.className = 'mensagem aprovado';
-    resultado.innerText = 'Pagamento aprovado!';
+        resultado.className = 'mensagem aprovado';
+        resultado.innerText = 'Pagamento aprovado!';
 
-    const tempoProduto = carrinho.reduce((acc, item) => acc + item.tempo, 0);
-    const tempoEntrega = getTempoEntrega();
-    const tempoTotal = tempoProduto + tempoEntrega;
-    
-    let segundosRestantes = tempoTotal * 60; 
+       
+        const tempoProduto = carrinho.reduce((acc, item) => acc + item.tempo, 0);
+        const tempoEntrega = getTempoEntrega();
+        const tempoTotal = (tempoProduto + tempoEntrega) * 60; 
 
-    const atualizarDisplay = () => {
-        const minutos = Math.floor(segundosRestantes / 60);
-        const segundos = segundosRestantes % 60;
+       
+        const novoPedido = {
+            id: Date.now(), 
+            itens: [...carrinho], 
+            segundosRestantes: tempoTotal
+        };
+
+        pedidosAtivos.push(novoPedido);
         
-        // Formata para aparecer sempre 00:00
-        const formatado = `${minutos}:${segundos.toString().padStart(2, '0')}`;
-        document.getElementById('tempoPreparo').innerText = formatado;
-    };
+    
+        iniciarMotorDePreparo();
 
-    const contadorId = setInterval(() => {
-        segundosRestantes--;
-        atualizarDisplay();
+        limparCarrinho();
+        botao.disabled = false;
 
-        if (segundosRestantes <= 0) {
-            clearInterval(contadorId);
-            document.getElementById('tempoPreparo').innerText = "Pedido Pronto!";
-        }
-    }, 1000);
-
-    atualizarDisplay();
-
-    setTimeout(() => {
-      irParaTela('tela5');
-    }, 1500);
-
+        setTimeout(() => {
+            irParaTela('tela5');
+        }, 1500);
     } else {
       resultado.className = 'mensagem negado';
       resultado.innerText = 'Pagamento negado!';
@@ -362,11 +413,77 @@ function solicitarPagamento() {
   }, 3000);
 }
 
+function iniciarMotorDePreparo() {
+    if (motorRodando) return; 
+    motorRodando = true;
+
+    setInterval(() => {
+        pedidosAtivos.forEach(pedido => {
+            if (pedido.segundosRestantes > 0) {
+                pedido.segundosRestantes--;
+            }
+        });
+        renderizarPedidosAtivos();
+    }, 1000);
+}
+
+function renderizarPedidosAtivos() {
+    const container = document.getElementById('tela5'); 
+    container.innerHTML = '<h1>Pedidos em Preparação</h1>';
+
+    pedidosAtivos.forEach((pedido, index) => {
+        const minutos = Math.floor(pedido.segundosRestantes / 60);
+        const segundos = pedido.segundosRestantes % 60;
+        const tempoFormatado = pedido.segundosRestantes > 0 
+            ? `${minutos}:${segundos.toString().padStart(2, '0')}` 
+            : "✅ Pronto!";
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <p><strong>Pedido #${index + 1}</strong></p>
+            <p>Itens: ${pedido.itens.map(i => i.nome).join(', ')}</p>
+            <p>Tempo estimado: <strong>${tempoFormatado}</strong></p>
+        `;
+        container.appendChild(card);
+    });
+  }
+
 function selecionarProduto(event, nome, preco, tempo) {
   produtoSelecionado = { nome, preco, tempo };
 
   document.querySelectorAll('.produto').forEach(p => p.classList.remove('selected'));
   event.currentTarget.classList.add('selected');
+}
+
+function iniciarOuAdicionarCronometro(tempoAdicionalMinutos) {
+  segundosRestantesGeral += tempoAdicionalMinutos * 60;
+
+  
+  if (intervaloContador) {
+    clearInterval(intervaloContador);
+  }
+
+  const atualizarDisplay = () => {
+    const minutos = Math.floor(segundosRestantesGeral / 60);
+    const segundos = segundosRestantesGeral % 60;
+    
+    const formatado = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+    document.getElementById('tempoPreparo').innerText = formatado;
+  };
+
+  atualizarDisplay();
+
+  intervaloContador = setInterval(() => {
+    segundosRestantesGeral--;
+    atualizarDisplay();
+
+    if (segundosRestantesGeral <= 0) {
+      clearInterval(intervaloContador);
+      intervaloContador = null;
+      document.getElementById('tempoPreparo').innerText = "Pedido Pronto!";
+    }
+  }, 1000);
 }
 
 function getTempoEntrega() {
@@ -418,17 +535,32 @@ function irParaCarrinho() {
   irParaTela('tela5');
 }
 
+function limparCarrinho() {
+  carrinho = []; 
+  total = 0;     
+  renderCarrinho(); 
+
+  const resultado = document.getElementById('resultado');
+  if (resultado) {
+    resultado.innerText = '';
+    resultado.className = '';
+  }
+}
+
 function abrirCardapio() {
-  document.getElementById('modalMsg').innerHTML = `
-    <h3>🔥 Mais Pedidos</h3>
+  const conteudoCardapio = `
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3>🔥 Mais Pedidos</h3>
+      <span onclick="fecharModal()" style="cursor:pointer; font-size: 20px;">✖️</span>
+    </div>
 
     <div class="grid">
-      <div onclick="selecionarProduto(event,'Tapioca',12,5)">
+      <div class="produto" onclick="selecionarProduto(event,'Tapioca',12,5); fecharModal()">
         <img src="https://www.sabornamesa.com.br/media/k2/items/cache/9217346f41a5b7e8e45bd1d2bf97a850_XL.jpg" width="80">
         <p>Tapioca</p>
       </div>
 
-      <div onclick="selecionarProduto(event,'Cuscuz',10,7)">
+      <div class="produto" onclick="selecionarProduto(event,'Cuscuz',10,7); fecharModal()">
         <img src="https://totalpass.com/wp-content/uploads/2025/01/cuscuz-de-milho.jpg" width="80">
         <p>Cuscuz</p>
       </div>
@@ -440,7 +572,7 @@ function abrirCardapio() {
     </button>
   `;
 
-  document.getElementById('modal').style.display = 'block';
+  mostrarModal(conteudoCardapio, false);
 }
 
 </script>
